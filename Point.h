@@ -6,10 +6,8 @@
 
 using namespace std;
 
-namespace NGroupingChallenge
-{
-	class CPoint
-	{
+namespace NGroupingChallenge{
+	class CPoint{
 	public:
 		void vAddCoordinate(double dCoordinate);
 		double dCalculateDistance(const CPoint& cOther) const;
