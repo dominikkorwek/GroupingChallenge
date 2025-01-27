@@ -1,7 +1,3 @@
-//
-// Created by user on 25.12.2024.
-//
-
 #include "GeneticAlgorithm.h"
 
 #include <cfloat>
@@ -12,17 +8,12 @@ GeneticAlgorithm::GeneticAlgorithm(const int populationSize,
     const double crossProbability,
     const double mutationProbability,
     const int methodIterations,
-    const double calculationTimeInSeconds,
-    const int countingFitnessMethodIterations,
     const NGroupingChallenge::CGroupingEvaluator& evaluator) :
 methodIterations(methodIterations),
-calculationTimeInSeconds(calculationTimeInSeconds),
-countingFitnessMethodIterations(countingFitnessMethodIterations),
 populationSize(populationSize),
 mutationProbability(mutationProbability),
 crossProbability(crossProbability),
 evaluator(&evaluator){
-
     rng = new RandomNumberGenerator(evaluator.iGetLowerBound(), evaluator.iGetUpperBound(), evaluator.iGetNumberOfPoints());
     generatePopulation();
 }
@@ -32,24 +23,24 @@ GeneticAlgorithm::~GeneticAlgorithm() {
     delete rng;
 }
 
-double GeneticAlgorithm::getBestResult() const {
-    auto best = DBL_MAX;
+void GeneticAlgorithm::findBestResult() {
+    auto best = bestGenotype.empty() ? DBL_MAX : evaluator->dEvaluate(bestGenotype);
     for (const Individual* individual : population) {
         const double candidate = individual->getFitness();
-        if (candidate < best)
+        if (candidate < best) {
             best = candidate;
+            bestGenotype = individual->getGenotype();
+        }
     }
-    return best;
 }
 
 void GeneticAlgorithm::run() {
     countFitness();
-
     while (methodIterations > 0) {
         crossPopulation();
         mutatePopulation();
         countFitness();
-        std:cout << getBestResult() << endl;
+        findBestResult();
         --methodIterations;
     }
 }
@@ -71,7 +62,7 @@ void GeneticAlgorithm::countFitness() const{
 void GeneticAlgorithm::crossPopulation() {
     vector<Individual*> newPopulation;
 
-    if (populationSize %2 == 1)
+    if (populationSize%2 == 1)
         newPopulation.push_back(new Individual(*population[getBestParent()]));
 
     for (int i = 0; i < populationSize/2; ++i ) {
@@ -90,14 +81,14 @@ void GeneticAlgorithm::crossPopulation() {
 
 void GeneticAlgorithm::mutatePopulation() const {
     for (int i = 0; i < populationSize; ++i)
-        if ( rng->generateProbability() < mutationProbability )
+        if ( rng->generateProbability() < mutationProbability)
             population[i]->mutate(*rng, mutationProbability);
 }
 
 ///             private helping methods
 pair<Individual*, Individual*> GeneticAlgorithm::getNewIndividuals(const Individual &first, const Individual &second) const {
-    const double propability = rng->generateProbability();
-    if (propability < crossProbability)
+    const double probability = rng->generateProbability();
+    if (probability < crossProbability)
         return first.crossover(second, *rng);
 
     return {new Individual(first), new Individual(second)};
@@ -115,4 +106,8 @@ int GeneticAlgorithm::getBestParent() const {
     const int second = rng->getRandomIndividualIndex(populationSize);
 
     return population[first]->getFitness() < population[second]->getFitness() ? first : second;
+}
+
+vector<int> GeneticAlgorithm::getBestResult() const {
+    return bestGenotype;
 }

@@ -1,7 +1,9 @@
-
 #ifndef RANDOMNUMBERGENERATOR_H
 #define RANDOMNUMBERGENERATOR_H
 #include <random>
+
+#define MAX_PERCENT 100
+#define DIVIDE_BASE 100.0
 
 class RandomNumberGenerator {
 public:

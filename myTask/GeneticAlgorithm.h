@@ -16,20 +16,16 @@ class GeneticAlgorithm {
 public:
     GeneticAlgorithm(int populationSize, double crossProbability,
         double mutationProbability, int methodIterations,
-        double calculationTimeInSeconds, int countingFitnessMethodIterations,
         const NGroupingChallenge::CGroupingEvaluator&  evaluator);
     ~GeneticAlgorithm();
 
     GeneticAlgorithm(const GeneticAlgorithm&) = delete;
     GeneticAlgorithm& operator=(const GeneticAlgorithm&) = delete;
 
-    double getBestResult() const;
     void run();
-
+    vector<int> getBestResult() const;
 private:
     int methodIterations;
-    double calculationTimeInSeconds;
-    int countingFitnessMethodIterations;
 
     int populationSize;
     double mutationProbability;
@@ -39,18 +35,16 @@ private:
     const RandomNumberGenerator* rng;
 
     vector<Individual*> population;
+    vector<int> bestGenotype;
 
     void generatePopulation();
-
     void countFitness() const;
-
     void crossPopulation();
     void mutatePopulation() const;
-
     pair<Individual*, Individual*> getNewIndividuals(const Individual& first, const Individual& second) const;
     void deletePopulation();
     int getBestParent() const;
-    
+    void findBestResult();
 };
 
 

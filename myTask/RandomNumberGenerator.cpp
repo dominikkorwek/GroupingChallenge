@@ -1,4 +1,3 @@
-
 #include "RandomNumberGenerator.h"
 
 RandomNumberGenerator::RandomNumberGenerator(const int lower, const int upper,const int pointSize):
@@ -13,8 +12,8 @@ int RandomNumberGenerator::generateGene() const {
 }
 
 double RandomNumberGenerator::generateProbability() const {
-    std::uniform_int_distribution<> distribProbability(0, 100);
-    return distribProbability(gen)/100.0;
+    std::uniform_int_distribution<> distribProbability(0, MAX_PERCENT);
+    return distribProbability(gen)/DIVIDE_BASE;
 }
 
 int RandomNumberGenerator::getRandomCrossingPoint() const{

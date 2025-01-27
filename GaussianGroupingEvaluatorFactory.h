@@ -54,7 +54,7 @@ namespace NGroupingChallenge
 		const int i_NUMBER_OF_POINTS_MIN_VALUE = 1;
 
 		vector<CGaussianDistribution>* pv_create_gaussian_distributions();
-		vector<CPoint>* pv_create_points(vector<CGaussianDistribution>& vGaussianDistributions);
+		vector<CPoint>* pv_create_points(vector<CGaussianDistribution>& vGaussianDistributions) const;
 
 		int i_number_of_groups;
 		int i_number_of_points;

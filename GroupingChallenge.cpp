@@ -24,17 +24,12 @@ int main(){
 
 	COptimizer c_optimizer(*pc_evaluator);
 
-	GeneticAlgorithm* gn = new GeneticAlgorithm(600, 0.1, 0.1, 5000, 12, 50, *pc_evaluator);
-
-	// c_optimizer.vInitialize();
-	//
-	// for (int i = 0; i < 10; i++){
-	// 	c_optimizer.vRunIteration();
-	// }
-
+    GeneticAlgorithm* gn = new GeneticAlgorithm(100, 0.1, 0.1, 5000, *pc_evaluator);
 	gn->run();
+    cout<<pc_evaluator->dEvaluate(gn->getBestResult());
 
 	delete pc_evaluator;
+    delete gn;
 
 	return 0;
 }

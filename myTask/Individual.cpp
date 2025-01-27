@@ -1,17 +1,14 @@
 #include "Individual.h"
-
 #include <cfloat>
-
 
 class RandomNumberGenerator;
 
 Individual::Individual():
-fitness(DBL_MAX){}
+fitness(DBL_MAX) {}
 
 Individual::Individual(const Individual &individual) = default;
 
 Individual::~Individual() = default;
-
 bool Individual::operator==(const Individual &individual) const {
     return genotype == individual.genotype;
 }
@@ -73,4 +70,26 @@ void Individual::generate(const NGroupingChallenge::CGroupingEvaluator& evaluato
         int gene = rng.generateGene();
         genotype.push_back(gene);
     }
+}
+
+vector<int> Individual::getGenotype() const {
+    return genotype;
+}
+
+Individual::Individual(Individual &&other) noexcept{
+    moveData(other);
+}
+
+Individual &Individual::operator=(Individual &&other) noexcept{
+    if (&other == this)
+        return *this;
+    moveData(other);
+    return *this;
+}
+
+void Individual::moveData(Individual &other) {
+    genotype = std::move(other.genotype);
+    fitness = other.fitness;
+    genotype.clear();
+    fitness = DBL_MAX;
 }
